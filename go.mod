@@ -2,6 +2,10 @@ module github.com/jasondavindev/hacktoberfest-2020
 
 go 1.15
 
+replace (
+  github.com/jasondavindev/hacktoberfest-2020/domain => ./domain
+)
+
 require (
 	github.com/fsnotify/fsnotify v1.4.9
 	github.com/joho/godotenv v1.3.0
