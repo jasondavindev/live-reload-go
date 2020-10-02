@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"io/ioutil"
+  "log"
 
 	"go.uber.org/config"
 )
