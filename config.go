@@ -30,7 +30,7 @@ func CfgFactory() Config {
 
 	var c Config
 	if err := provider.Get("development").Populate(&c); err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	return c
