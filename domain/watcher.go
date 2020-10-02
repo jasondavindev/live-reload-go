@@ -36,8 +36,6 @@ func ListenEvents(watcher *fsnotify.Watcher, excludedDirectories string) {
 			if isModifiedFile(event) {
 				fmt.Println("modified file:", event.Name)
 			}
-
-			command()
 		case err, ok := <-watcher.Errors:
 			if !ok {
 				return
