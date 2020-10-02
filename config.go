@@ -18,14 +18,14 @@ type Config struct {
 func CfgFactory() Config {
 	yamlFile, err := ioutil.ReadFile("config.yml")
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	yamlFileReader := bytes.NewReader(yamlFile)
 
 	provider, err := config.NewYAML(config.Source(yamlFileReader))
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	var c Config
