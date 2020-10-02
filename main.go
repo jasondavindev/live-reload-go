@@ -1,11 +1,11 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 
-	"github.com/fsnotify/fsnotify"
+	"github.com/jasondavindev/hacktoberfest-2020/domain"
+
 	"github.com/joho/godotenv"
 )
 
@@ -16,43 +16,15 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	environment := os.Getenv("GOENV")
 	directoryWatch := os.Getenv("DIRECTORY")
 	excludedDirectories := os.Getenv("EXCLUDE")
-	fmt.Println(environment)
 
-	watcher, err := fsnotify.NewWatcher()
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer watcher.Close()
+	watcher := domain.CreateWatcher()
+	defer domain.CloseWatcher(watcher)
 
 	done := make(chan bool)
-	go func() {
-		for {
-			select {
-			case event, ok := <-watcher.Events:
-				if !ok {
-					return
-				}
-				if event.Name == excludedDirectories {
-					continue
-				}
-				if event.Op&fsnotify.Write == fsnotify.Write {
-					log.Println("modified file:", event.Name)
-				}
-			case err, ok := <-watcher.Errors:
-				if !ok {
-					return
-				}
-				log.Println("error:", err)
-			}
-		}
-	}()
+	go domain.ListenEvents(watcher, excludedDirectories)
 
-	err = watcher.Add(directoryWatch)
-	if err != nil {
-		log.Fatal(err)
-	}
+	domain.AddDirectoryToWatch(watcher, directoryWatch)
 	<-done
 }
