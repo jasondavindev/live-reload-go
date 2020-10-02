@@ -18,7 +18,7 @@ func main() {
 
 	environment := os.Getenv("GOENV")
 	directoryWatch := os.Getenv("DIRECTORY")
-	exclude := os.Getenv("EXCLUDE")
+	excludedDirectories := os.Getenv("EXCLUDE")
 	fmt.Println(environment)
 
 	watcher, err := fsnotify.NewWatcher()
@@ -35,7 +35,7 @@ func main() {
 				if !ok {
 					return
 				}
-				if event.Name == exclude {
+				if event.Name == excludedDirectories {
 					continue
 				}
 				if event.Op&fsnotify.Write == fsnotify.Write {
