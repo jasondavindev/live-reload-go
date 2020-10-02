@@ -35,7 +35,7 @@ func main() {
 				if !ok {
 					return
 				}
-				if event.Name == ignoreFile {
+				if event.Name == exclude {
 					continue
 				}
 				if event.Op&fsnotify.Write == fsnotify.Write {
