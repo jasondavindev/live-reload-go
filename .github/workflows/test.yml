@@ -16,11 +16,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Creating .env
+      - name: Creating config.yml
         uses: canastro/copy-file-action@master
         with:
-          source: ".env.example"
-          target: ".env"
+          source: "config.yml.example"
+          target: "config.yml"
 
       - name: Test
         run: go test ./...

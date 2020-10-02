@@ -1,0 +1,4 @@
+"development":
+    "goenv": "development"
+    "directory": ${PWD}
+    "exclude": ""

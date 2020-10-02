@@ -1,23 +1,15 @@
 package main
 
 import (
-	"log"
-	"os"
-
 	"github.com/jasondavindev/hacktoberfest-2020/domain"
-
-	"github.com/joho/godotenv"
 )
 
 func main() {
-	err := godotenv.Load()
 
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
+	cfg := CfgFactory()
 
-	directoryWatch := os.Getenv("DIRECTORY")
-	excludedDirectories := os.Getenv("EXCLUDE")
+	directoryWatch := cfg.Directory
+	excludedDirectories := cfg.Exclude
 
 	watcher := domain.CreateWatcher()
 	defer domain.CloseWatcher(watcher)
