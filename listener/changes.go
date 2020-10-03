@@ -10,14 +10,22 @@ import (
 	"gopkg.in/fsnotify.v1"
 )
 
-type ChangeListener struct {
+type IChangesListener interface {
+	CloseWatcher()
+	ListenEvents()
+	isExcludedFile(absoluteFile string) bool
+	SetupDirectoriesToWatch(directory string)
+	EventHandler(event fsnotify.Event) bool
+}
+
+type ChangesListener struct {
 	watcher             *fsnotify.Watcher
 	excludedDirectories []string
 	job                 command.Job
 }
 
-func CreateChangeListener(excludedDirectories string, cmd string) ChangeListener {
-	listener := ChangeListener{}
+func CreateChangesListener(excludedDirectories string, cmd string) ChangesListener {
+	listener := ChangesListener{}
 	listener.watcher = CreateWatcher()
 	listener.excludedDirectories = splitExcludedFiles(excludedDirectories)
 	listener.job = command.CreateJob(cmd)
@@ -43,11 +51,11 @@ func splitExcludedFiles(excludedFiles string) []string {
 	return strings.Split(excludedFiles, ",")
 }
 
-func (cl *ChangeListener) CloseWatcher() {
+func (cl *ChangesListener) CloseWatcher() {
 	cl.watcher.Close()
 }
 
-func (cl *ChangeListener) ListenEvents() {
+func (cl *ChangesListener) ListenEvents() {
 	for {
 		select {
 		case event, ok := <-cl.watcher.Events:
@@ -59,7 +67,7 @@ func (cl *ChangeListener) ListenEvents() {
 				continue
 			}
 
-			cl.eventHandler(event)
+			cl.EventHandler(event)
 		case err, ok := <-cl.watcher.Errors:
 			if !ok {
 				return
@@ -70,7 +78,7 @@ func (cl *ChangeListener) ListenEvents() {
 	}
 }
 
-func (cl *ChangeListener) isExcludedFile(absoluteFile string) bool {
+func (cl *ChangesListener) isExcludedFile(absoluteFile string) bool {
 	fileName := filepath.Base(absoluteFile)
 
 	for _, file := range cl.excludedDirectories {
@@ -82,15 +90,18 @@ func (cl *ChangeListener) isExcludedFile(absoluteFile string) bool {
 	return false
 }
 
-func (cl *ChangeListener) SetupDirectoriesToWatch(directory string) {
+func (cl *ChangesListener) SetupDirectoriesToWatch(directory string) {
 	err := cl.watcher.Add(directory)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-func (cl *ChangeListener) eventHandler(event fsnotify.Event) {
+func (cl *ChangesListener) EventHandler(event fsnotify.Event) bool {
 	if isModifiedFile(event) {
 		fmt.Println(cl.job.ExecuteJob())
+		return true
 	}
+
+	return false
 }
