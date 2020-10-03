@@ -1,5 +1,5 @@
-"development":
-    "goenv": "development"
-    "directory": ${PWD}
-    "exclude": ""
-    "command": ""
+development:
+  goenv: development
+  directory: ""
+  exclude: ""
+  command: ""
