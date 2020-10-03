@@ -16,11 +16,5 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Creating .env
-        uses: canastro/copy-file-action@master
-        with:
-          source: ".env.example"
-          target: ".env"
-
       - name: Test
         run: go test ./...
