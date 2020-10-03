@@ -3,9 +3,9 @@ module github.com/jasondavindev/hacktoberfest-2020
 go 1.15
 
 replace (
-	github.com/jasondavindev/hacktoberfest-2020/command => ./command
-	github.com/jasondavindev/hacktoberfest-2020/config => ./config
-	github.com/jasondavindev/hacktoberfest-2020/listener => ./listener
+  github.com/jasondavindev/hacktoberfest-2020/command => ./command
+  github.com/jasondavindev/hacktoberfest-2020/config => ./config
+  github.com/jasondavindev/hacktoberfest-2020/listener => ./listener
 )
 
 require (
