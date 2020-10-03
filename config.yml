@@ -1,5 +1,5 @@
 development:
   goenv: development
-  directory: ""
+  directory: "./bin"
   exclude: ""
-  command: ""
+  command: "echo yay"

@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"io/ioutil"
 	"log"
 	"path/filepath"
 	"strings"
@@ -66,6 +67,26 @@ func SetupDirectoriesToWatch(w *fsnotify.Watcher, directory string) {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	for _, dirName := range findSubDirectories(directory) {
+		SetupDirectoriesToWatch(w, filepath.Join(directory, dirName))
+	}
+}
+
+func findSubDirectories(directory string) []string {
+	var dirNames []string
+
+	files, err := ioutil.ReadDir(directory)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, f := range files {
+		if f.IsDir() && f.Name()[:1] != "." {
+			dirNames = append(dirNames, f.Name())
+		}
+	}
+	return dirNames
 }
 
 func splitExcludedFiles(excludedFiles string) []string {
