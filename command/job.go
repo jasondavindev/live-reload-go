@@ -6,9 +6,6 @@ import (
 	"strings"
 )
 
-var commandName string
-var commandArgs []string
-
 type Job struct {
 	cmdName string
 	cmdArgs []string
