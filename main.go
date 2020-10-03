@@ -1,8 +1,6 @@
 package main
 
 import (
-	"log"
-
 	"github.com/jasondavindev/hacktoberfest-2020/domain"
 )
 
@@ -14,7 +12,6 @@ func main() {
 	excludedDirectories := cfg.Exclude
 	command := cfg.Command
 
-	log.Print(command)
 	watcher := domain.CreateWatcher()
 	defer domain.CloseWatcher(watcher)
 
