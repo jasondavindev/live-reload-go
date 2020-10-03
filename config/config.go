@@ -1,9 +1,9 @@
-package main
+package config
 
 import (
 	"bytes"
 	"io/ioutil"
-  "log"
+	"log"
 
 	"go.uber.org/config"
 )
