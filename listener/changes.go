@@ -71,7 +71,7 @@ func SetupDirectoriesToWatch(w *fsnotify.Watcher, directory string) {
 	}
 
 	for _, dirName := range findSubDirectories(directory) {
-		SetupDirectoriesToWatch(w, filepath.Join(directory, dirName))
+		SetupDirectoriesToWatch(w, dirName)
 	}
 }
 
@@ -85,7 +85,7 @@ func findSubDirectories(directory string) []string {
 
 	for _, f := range files {
 		if f.IsDir() && f.Name()[:1] != "." {
-			dirNames = append(dirNames, f.Name())
+			dirNames = append(dirNames, filepath.Join(directory, f.Name()))
 		}
 	}
 	return dirNames
