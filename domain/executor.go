@@ -1,16 +1,13 @@
 package domain
 
 import (
-	"os"
 	s "strings"
 )
 
-func command() {
-	env := os.Getenv("COMMAND")
-
+func commandExecutor(command string) {
 	var app string
-	if env != "" {
-		commands := s.Split(env, " ")
+	if command != "" {
+		commands := s.Split(command, " ")
 		app = commands[0]
 		executeCommand(app, commands[1:])
 	}

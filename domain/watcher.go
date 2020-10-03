@@ -21,7 +21,7 @@ func CloseWatcher(w *fsnotify.Watcher) {
 	w.Close()
 }
 
-func ListenEvents(watcher *fsnotify.Watcher, excludedDirectories string) {
+func ListenEvents(watcher *fsnotify.Watcher, excludedDirectories string, command string) {
 	for {
 		select {
 		case event, ok := <-watcher.Events:
@@ -37,7 +37,7 @@ func ListenEvents(watcher *fsnotify.Watcher, excludedDirectories string) {
 				fmt.Println("modified file:", event.Name)
 			}
 
-			command()
+			commandExecutor(command)
 		case err, ok := <-watcher.Errors:
 			if !ok {
 				return

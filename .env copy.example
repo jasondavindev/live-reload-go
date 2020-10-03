@@ -1,4 +1,0 @@
-GOENV=development
-DIRECTORY=${PWD}
-EXCLUDE=
-COMMAND=
