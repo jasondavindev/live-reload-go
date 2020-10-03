@@ -84,8 +84,9 @@ func findSubDirectories(directory string) []string {
 	}
 
 	for _, f := range files {
-		if f.IsDir() && f.Name()[:1] != "." {
-			dirNames = append(dirNames, filepath.Join(directory, f.Name()))
+		name := f.Name()
+		if f.IsDir() && !(filepath.HasPrefix(name, ".") && name != "." && name != "..") {
+			dirNames = append(dirNames, filepath.Join(directory, name))
 		}
 	}
 	return dirNames
