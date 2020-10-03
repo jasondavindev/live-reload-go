@@ -84,8 +84,11 @@ func findSubDirectories(directory string) []string {
 	}
 
 	for _, f := range files {
-		if f.IsDir() && f.Name()[:1] != "." {
-			dirNames = append(dirNames, filepath.Join(directory, f.Name()))
+		name := f.Name()
+		//This is bad, filepath.HasPrefix has some issues we should adress later. More at: https://codereview.appspot.com/5712045
+		hidden := filepath.HasPrefix(name, ".") && name != "." && name != ".."
+		if f.IsDir() && !hidden {
+			dirNames = append(dirNames, filepath.Join(directory, name))
 		}
 	}
 	return dirNames
