@@ -1,15 +1,17 @@
 package main
 
 import (
+	"strings"
+
+	"github.com/jasondavindev/hacktoberfest-2020/config"
 	"github.com/jasondavindev/hacktoberfest-2020/domain"
 )
 
 func main() {
-
-	cfg := CfgFactory()
+	cfg := config.CfgFactory()
 
 	directoryWatch := cfg.Directory
-	excludedDirectories := cfg.Exclude
+	excludedDirectories := strings.Split(cfg.Exclude, ",")
 	command := cfg.Command
 
 	watcher := domain.CreateWatcher()
@@ -18,6 +20,6 @@ func main() {
 	done := make(chan bool)
 	go domain.ListenEvents(watcher, excludedDirectories, command)
 
-	domain.AddDirectoryToWatch(watcher, directoryWatch)
+	domain.SetupDirectoriesToWatch(watcher, directoryWatch)
 	<-done
 }
