@@ -1,7 +1,6 @@
 package command
 
 import (
-	"fmt"
 	"log"
 	"os/exec"
 	"strings"
@@ -18,7 +17,6 @@ func CreateCommand(commandStr string) {
 	commands := strings.Split(commandStr, " ")
 	commandName = commands[0]
 	commandArgs = commands[1:]
-	fmt.Println("Comandos", commandName, commandArgs)
 }
 
 func ExecuteJob() string {
