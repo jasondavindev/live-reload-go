@@ -12,12 +12,13 @@ func main() {
 
 	directoryWatch := cfg.Directory
 	excludedDirectories := strings.Split(cfg.Exclude, ",")
+	command := cfg.Command
 
 	watcher := domain.CreateWatcher()
 	defer domain.CloseWatcher(watcher)
 
 	done := make(chan bool)
-	go domain.ListenEvents(watcher, excludedDirectories)
+	go domain.ListenEvents(watcher, excludedDirectories, command)
 
 	domain.SetupDirectoriesToWatch(watcher, directoryWatch)
 	<-done
