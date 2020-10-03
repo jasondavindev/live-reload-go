@@ -1,11 +1,16 @@
-package domain
+package listener
 
 import (
+<<<<<<< HEAD:domain/watcher.go
 	"io/ioutil"
+=======
+	"fmt"
+>>>>>>> 63170ad0a90bc21fe56ec45e9d75533ca43f68f3:listener/changes.go
 	"log"
 	"path/filepath"
 	"strings"
 
+	"github.com/jasondavindev/hacktoberfest-2020/command"
 	"gopkg.in/fsnotify.v1"
 )
 
@@ -93,8 +98,8 @@ func splitExcludedFiles(excludedFiles string) []string {
 	return strings.Split(excludedFiles, ",")
 }
 
-func eventHandler(event fsnotify.Event, command string) {
+func eventHandler(event fsnotify.Event, commandStr string) {
 	if isModifiedFile(event) {
-		commandExecutor(command)
+		fmt.Println(command.ExecuteJob())
 	}
 }
