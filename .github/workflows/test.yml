@@ -16,11 +16,5 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Creating config.yml
-        uses: canastro/copy-file-action@master
-        with:
-          source: "config.yml.example"
-          target: "config.yml"
-
       - name: Test
         run: go test ./...
