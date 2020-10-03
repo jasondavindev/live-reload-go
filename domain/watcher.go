@@ -1,7 +1,6 @@
 package domain
 
 import (
-	"fmt"
 	"log"
 	"path/filepath"
 	"strings"
@@ -35,8 +34,7 @@ func ListenEvents(watcher *fsnotify.Watcher, excludedDirectories []string, comma
 				continue
 			}
 
-			eventHandler(event)
-			commandExecutor(command)
+			eventHandler(event, command)
 		case err, ok := <-watcher.Errors:
 			if !ok {
 				return
@@ -48,7 +46,7 @@ func ListenEvents(watcher *fsnotify.Watcher, excludedDirectories []string, comma
 }
 
 func isModifiedFile(e fsnotify.Event) bool {
-	return e.Op == fsnotify.Create || e.Op == fsnotify.Remove
+	return e.Op == fsnotify.Create || e.Op == fsnotify.Remove || e.Op == fsnotify.Write
 }
 
 func isExcludedFile(absoluteFile string, excludedFiles []string) bool {
@@ -74,8 +72,8 @@ func splitExcludedFiles(excludedFiles string) []string {
 	return strings.Split(excludedFiles, ",")
 }
 
-func eventHandler(event fsnotify.Event) {
+func eventHandler(event fsnotify.Event, command string) {
 	if isModifiedFile(event) {
-		fmt.Println("modified file:", event.Name)
+		commandExecutor(command)
 	}
 }
