@@ -1,11 +1,8 @@
 package listener
 
 import (
-<<<<<<< HEAD:domain/watcher.go
-	"io/ioutil"
-=======
 	"fmt"
->>>>>>> 63170ad0a90bc21fe56ec45e9d75533ca43f68f3:listener/changes.go
+	"io/ioutil"
 	"log"
 	"path/filepath"
 	"strings"
