@@ -1,5 +1,5 @@
 development:
   goenv: development
-  directory: ""
+  directory: "/Users/jasoncarneiro/projects/hacktoberfest-2020"
   exclude: ""
-  command: ""
+  command: "echo eita"

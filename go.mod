@@ -3,13 +3,14 @@ module github.com/jasondavindev/hacktoberfest-2020
 go 1.15
 
 replace (
-  github.com/jasondavindev/hacktoberfest-2020/command => ./command
-  github.com/jasondavindev/hacktoberfest-2020/config => ./config
-  github.com/jasondavindev/hacktoberfest-2020/listener => ./listener
+	github.com/jasondavindev/hacktoberfest-2020/command => ./command
+	github.com/jasondavindev/hacktoberfest-2020/config => ./config
+	github.com/jasondavindev/hacktoberfest-2020/listener => ./listener
 )
 
 require (
 	github.com/fsnotify/fsnotify v1.4.9
+	github.com/golang/mock v1.4.4
 	github.com/joho/godotenv v1.3.0
 	github.com/stretchr/objx v0.3.0 // indirect
 	github.com/stretchr/testify v1.6.1 // indirect

@@ -9,18 +9,27 @@ import (
 var commandName string
 var commandArgs []string
 
-func CreateCommand(commandStr string) {
+type Job struct {
+	cmdName string
+	cmdArgs []string
+}
+
+func CreateJob(commandStr string) Job {
 	if commandStr == "" {
 		log.Fatal("No command to execute was specified")
 	}
 
 	commands := strings.Split(commandStr, " ")
-	commandName = commands[0]
-	commandArgs = commands[1:]
+	job := Job{
+		cmdName: commands[0],
+		cmdArgs: commands[1:],
+	}
+
+	return job
 }
 
-func ExecuteJob() string {
-	cmd := exec.Command(commandName, commandArgs...)
+func (j *Job) ExecuteJob() string {
+	cmd := exec.Command(j.cmdName, j.cmdArgs...)
 
 	stdout, err := cmd.Output()
 
