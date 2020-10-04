@@ -3,16 +3,15 @@ module github.com/jasondavindev/hacktoberfest-2020
 go 1.15
 
 replace (
-  github.com/jasondavindev/hacktoberfest-2020/command => ./command
-  github.com/jasondavindev/hacktoberfest-2020/config => ./config
-  github.com/jasondavindev/hacktoberfest-2020/listener => ./listener
+	github.com/jasondavindev/hacktoberfest-2020/command => ./command
+	github.com/jasondavindev/hacktoberfest-2020/config => ./config
+	github.com/jasondavindev/hacktoberfest-2020/listener => ./listener
 )
 
 require (
 	github.com/fsnotify/fsnotify v1.4.9
-	github.com/joho/godotenv v1.3.0
 	github.com/stretchr/objx v0.3.0 // indirect
-	github.com/stretchr/testify v1.6.1 // indirect
+	github.com/stretchr/testify v1.6.1
 	go.uber.org/config v1.4.0
 	go.uber.org/multierr v1.6.0 // indirect
 	golang.org/x/crypto v0.0.0-20201001193750-eb9a90e9f9cb // indirect
