@@ -3,36 +3,15 @@ package listener
 import (
 	"testing"
 
-	"github.com/golang/mock/gomock"
-	"github.com/jasondavindev/hacktoberfest-2020/mocks"
-
+	"github.com/stretchr/testify/assert"
 	"gopkg.in/fsnotify.v1"
 )
 
 func TestIsModifiedFile(t *testing.T) {
-	e := fsnotify.Event{Op: fsnotify.Write}
-
-	if !isModifiedFile(e) {
-		t.Errorf("Expected isModifiedFile %s is true", e.Op)
-	}
-
-	e.Op = fsnotify.Remove
-
-	if !isModifiedFile(e) {
-		t.Errorf("Expected isModifiedFile %s is true", e.Op)
-	}
-
-	e.Op = fsnotify.Remove
-
-	if !isModifiedFile(e) {
-		t.Errorf("Expected isModifiedFile %s is true", e.Op)
-	}
-
-	e.Op = fsnotify.Chmod
-
-	if isModifiedFile(e) {
-		t.Errorf("Expected isModifiedFile %s is false", e.Op)
-	}
+	assert.Equal(t, true, isModifiedFile(fsnotify.Event{Op: fsnotify.Write}))
+	assert.Equal(t, true, isModifiedFile(fsnotify.Event{Op: fsnotify.Remove}))
+	assert.Equal(t, true, isModifiedFile(fsnotify.Event{Op: fsnotify.Create}))
+	assert.Equal(t, false, isModifiedFile(fsnotify.Event{Op: fsnotify.Chmod}))
 }
 
 func TestIsExcludedFile(t *testing.T) {
@@ -40,22 +19,9 @@ func TestIsExcludedFile(t *testing.T) {
 	excludedFiles := "file.go"
 	listener := CreateChangesListener(excludedFiles, "echo")
 
-	if !listener.isExcludedFile(filepath) {
-		t.Errorf("Expected isExcludedFile to be true")
-	}
+	assert.Equal(t, true, listener.isExcludedFile(filepath))
 
 	listener.excludedDirectories = []string{}
 
-	if listener.isExcludedFile(filepath) {
-		t.Errorf("Expected isExcludedFile to be false")
-	}
-}
-
-func TestEventHandler(t *testing.T) {
-	mockCtrl := gomock.NewController(t)
-	defer mockCtrl.Finish()
-	// event := fsnotify.Event{Op: fsnotify.Create}
-
-	mocks.NewMockIChangesListener(mockCtrl)
-	// mockChangesListener.EXPECT().EventHandler(event)
+	assert.Equal(t, false, listener.isExcludedFile(filepath))
 }

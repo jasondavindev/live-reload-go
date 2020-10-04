@@ -11,15 +11,6 @@ import (
 	"gopkg.in/fsnotify.v1"
 )
 
-type IChangesListener interface {
-	CloseWatcher()
-	ListenEvents()
-	isExcludedFile(absoluteFile string) bool
-	isModifiedFile(e fsnotify.Event) bool
-	SetupDirectoriesToWatch(directory string)
-	EventHandler(event fsnotify.Event) bool
-}
-
 type ChangesListener struct {
 	watcher             *fsnotify.Watcher
 	excludedDirectories []string
@@ -45,37 +36,12 @@ func CreateWatcher() *fsnotify.Watcher {
 	return watcher
 }
 
+func isModifiedFile(e fsnotify.Event) bool {
+	return e.Op == fsnotify.Create || e.Op == fsnotify.Remove || e.Op == fsnotify.Write
+}
+
 func splitExcludedFiles(excludedFiles string) []string {
 	return strings.Split(excludedFiles, ",")
-}
-
-func isHiddenFile(fileName string) bool {
-	return filepath.HasPrefix(fileName, ".") && fileName != "." && fileName != ".."
-}
-
-func findSubDirectories(directory string) ([]string, error) {
-	paths := []string{}
-
-	return paths, filepath.Walk(directory, func(newPath string, info os.FileInfo, err error) error {
-		if err != nil {
-			return err
-		}
-
-		if info.IsDir() {
-			name := info.Name()
-			hidden := isHiddenFile(name)
-			if hidden {
-				return filepath.SkipDir
-			}
-			paths = append(paths, newPath)
-		}
-
-		return nil
-	})
-}
-
-func (cl *ChangesListener) isModifiedFile(e fsnotify.Event) bool {
-	return e.Op == fsnotify.Create || e.Op == fsnotify.Remove || e.Op == fsnotify.Write
 }
 
 func (cl *ChangesListener) CloseWatcher() {
@@ -90,7 +56,7 @@ func (cl *ChangesListener) ListenEvents() {
 				return
 			}
 
-			if cl.isExcludedFile(event.Name) || isHiddenFile(event.Name) {
+			if cl.isExcludedFile(event.Name) {
 				continue
 			}
 
@@ -118,23 +84,13 @@ func (cl *ChangesListener) isExcludedFile(absoluteFile string) bool {
 }
 
 func (cl *ChangesListener) SetupDirectoriesToWatch(directory string) {
-	directories, err := findSubDirectories(directory)
+	err := cl.watcher.Add(directory)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	directories = append(directories, directory)
-
-	for _, file := range directories {
-		err = cl.watcher.Add(file)
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
-}
-
 func (cl *ChangesListener) EventHandler(event fsnotify.Event) bool {
-	if cl.isModifiedFile(event) {
+	if isModifiedFile(event) {
 		fmt.Println(cl.job.ExecuteJob())
 		return true
 	}
