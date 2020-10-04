@@ -10,14 +10,6 @@ import (
 	"gopkg.in/fsnotify.v1"
 )
 
-type IChangesListener interface {
-	CloseWatcher()
-	ListenEvents()
-	isExcludedFile(absoluteFile string) bool
-	SetupDirectoriesToWatch(directory string)
-	EventHandler(event fsnotify.Event) bool
-}
-
 type ChangesListener struct {
 	watcher             *fsnotify.Watcher
 	excludedDirectories []string
