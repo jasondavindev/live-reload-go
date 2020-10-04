@@ -12,7 +12,7 @@ func main() {
 	excludedDirectories := cfg.Exclude
 	command := cfg.Command
 
-	cl := listener.CreateChangeListener(excludedDirectories, command)
+	cl := listener.CreateChangesListener(excludedDirectories, command)
 	defer cl.CloseWatcher()
 
 	done := make(chan bool)
