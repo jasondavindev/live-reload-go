@@ -82,10 +82,19 @@ func (cl *ChangesListener) isExcludedFile(absoluteFile string) bool {
 	return false
 }
 
-func (cl *ChangesListener) SetupDirectoriesToWatch(directory string) {
-	err := cl.watcher.Add(directory)
+func SetupDirectoriesToWatch(directory string) {
+	directories, err := findSubDirectories(directory)
 	if err != nil {
 		log.Fatal(err)
+	}
+
+	directories = append(directories, directory)
+
+	for _, file := range directories {
+		err = cl.watcher.Add(file)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 }
 
@@ -96,4 +105,29 @@ func (cl *ChangesListener) EventHandler(event fsnotify.Event) bool {
 	}
 
 	return false
+}
+
+func isHiddenFile(fileName string) bool {
+	return filepath.HasPrefix(fileName, ".") && fileName != "." && fileName != ".."
+}
+
+func findSubDirectories(directory string) ([]string, error) {
+	paths := []string{}
+
+	return paths, filepath.Walk(directory, func(newPath string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+
+		if info.IsDir() {
+			name := info.Name()
+			hidden := isHiddenFile(name)
+			if hidden {
+				return filepath.SkipDir
+			}
+			paths = append(paths, newPath)
+		}
+
+		return nil
+	})
 }
