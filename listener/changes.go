@@ -55,7 +55,7 @@ func (cl *ChangesListener) ListenEvents() {
 				return
 			}
 
-			if cl.isExcludedFile(event.Name) {
+			if cl.isExcludedFile(event.Name) || isHiddenFile(event.Name){
 				continue
 			}
 
