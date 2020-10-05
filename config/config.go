@@ -2,6 +2,7 @@ package config
 
 import (
 	"bytes"
+	"flag"
 	"io/ioutil"
 	"log"
 
@@ -17,8 +18,8 @@ type Config struct {
 }
 
 //CfgFactory generates config based on config.yml file
-func CfgFactory() Config {
-	yamlFile, err := ioutil.ReadFile("config.yml")
+func CfgFactory(configPath string) Config {
+	yamlFile, err := ioutil.ReadFile(configPath)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -36,4 +37,13 @@ func CfgFactory() Config {
 	}
 
 	return c
+}
+
+// CfgFilePath check if the config.yml directory has been passed
+func CfgFilePath() string {
+	var configFlag string
+	flag.StringVar(&configFlag, "config-file", "config.yml", "a config file path")
+
+	flag.Parse()
+	return configFlag
 }

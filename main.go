@@ -6,7 +6,10 @@ import (
 )
 
 func main() {
-	cfg := config.CfgFactory()
+
+	configPath := config.CfgFilePath()
+
+	cfg := config.CfgFactory(configPath)
 
 	directoryWatch := cfg.Directory
 	excludedDirectories := cfg.Exclude
