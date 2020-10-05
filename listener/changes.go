@@ -3,6 +3,7 @@ package listener
 import (
 	"fmt"
 	"log"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -55,7 +56,7 @@ func (cl *ChangesListener) ListenEvents() {
 				return
 			}
 
-			if cl.isExcludedFile(event.Name) {
+			if cl.isExcludedFile(event.Name) || isHiddenFile(event.Name) {
 				continue
 			}
 
@@ -83,9 +84,18 @@ func (cl *ChangesListener) isExcludedFile(absoluteFile string) bool {
 }
 
 func (cl *ChangesListener) SetupDirectoriesToWatch(directory string) {
-	err := cl.watcher.Add(directory)
+	directories, err := findSubDirectories(directory)
 	if err != nil {
 		log.Fatal(err)
+	}
+
+	directories = append(directories, directory)
+
+	for _, file := range directories {
+		err = cl.watcher.Add(file)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 }
 
@@ -96,4 +106,29 @@ func (cl *ChangesListener) EventHandler(event fsnotify.Event) bool {
 	}
 
 	return false
+}
+
+func isHiddenFile(fileName string) bool {
+	return filepath.HasPrefix(fileName, ".") && fileName != "." && fileName != ".."
+}
+
+func findSubDirectories(directory string) ([]string, error) {
+	paths := []string{}
+
+	return paths, filepath.Walk(directory, func(newPath string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+
+		if info.IsDir() {
+			name := info.Name()
+			hidden := isHiddenFile(name)
+			if hidden {
+				return filepath.SkipDir
+			}
+			paths = append(paths, newPath)
+		}
+
+		return nil
+	})
 }
