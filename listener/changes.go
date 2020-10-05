@@ -55,7 +55,7 @@ func (cl *ChangesListener) ListenEvents() {
 				return
 			}
 
-			if cl.isExcludedFile(event.Name) {
+			if cl.isExcludedFile(event.Name) || isHiddenFile(event.Name){
 				continue
 			}
 
@@ -82,7 +82,7 @@ func (cl *ChangesListener) isExcludedFile(absoluteFile string) bool {
 	return false
 }
 
-func SetupDirectoriesToWatch(directory string) {
+func (cl *ChangesListener) SetupDirectoriesToWatch(directory string) {
 	directories, err := findSubDirectories(directory)
 	if err != nil {
 		log.Fatal(err)
