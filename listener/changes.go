@@ -3,6 +3,7 @@ package listener
 import (
 	"fmt"
 	"log"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -55,7 +56,7 @@ func (cl *ChangesListener) ListenEvents() {
 				return
 			}
 
-			if cl.isExcludedFile(event.Name) || isHiddenFile(event.Name){
+			if cl.isExcludedFile(event.Name) || isHiddenFile(event.Name) {
 				continue
 			}
 
