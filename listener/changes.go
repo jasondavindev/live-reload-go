@@ -14,14 +14,14 @@ import (
 type ChangesListener struct {
 	watcher             *fsnotify.Watcher
 	excludedDirectories []string
-	job                 command.Job
+	jobRunner           command.JobRunner
 }
 
-func CreateChangesListener(excludedDirectories string, cmd string) ChangesListener {
+func CreateChangesListener(excludedDirectories string, jobRunner command.JobRunner) ChangesListener {
 	listener := ChangesListener{}
 	listener.watcher = CreateWatcher()
 	listener.excludedDirectories = splitExcludedFiles(excludedDirectories)
-	listener.job = command.CreateJob(cmd)
+	listener.jobRunner = jobRunner
 
 	return listener
 }
@@ -89,8 +89,6 @@ func (cl *ChangesListener) SetupDirectoriesToWatch(directory string) {
 		log.Fatal(err)
 	}
 
-	directories = append(directories, directory)
-
 	for _, file := range directories {
 		err = cl.watcher.Add(file)
 		if err != nil {
@@ -101,15 +99,22 @@ func (cl *ChangesListener) SetupDirectoriesToWatch(directory string) {
 
 func (cl *ChangesListener) EventHandler(event fsnotify.Event) bool {
 	if isModifiedFile(event) {
-		fmt.Println(cl.job.ExecuteJob())
+		formatResponse(cl.jobRunner.RunJobs())
 		return true
 	}
 
 	return false
 }
 
-func isHiddenFile(fileName string) bool {
-	return filepath.HasPrefix(fileName, ".") && fileName != "." && fileName != ".."
+func isHiddenFile(path string) bool {
+	absolutePath, err := filepath.Abs(path)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	fileName := filepath.Base(absolutePath)
+
+	return filepath.HasPrefix(absolutePath, ".") || fileName[0:1] == "."
 }
 
 func findSubDirectories(directory string) ([]string, error) {
@@ -121,9 +126,7 @@ func findSubDirectories(directory string) ([]string, error) {
 		}
 
 		if info.IsDir() {
-			name := info.Name()
-			hidden := isHiddenFile(name)
-			if hidden {
+			if isHiddenFile(newPath) {
 				return filepath.SkipDir
 			}
 			paths = append(paths, newPath)
@@ -131,4 +134,10 @@ func findSubDirectories(directory string) ([]string, error) {
 
 		return nil
 	})
+}
+
+func formatResponse(res []string) {
+	for _, str := range res {
+		fmt.Println(str)
+	}
 }

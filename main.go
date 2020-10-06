@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/jasondavindev/hacktoberfest-2020/command"
 	"github.com/jasondavindev/hacktoberfest-2020/config"
 	"github.com/jasondavindev/hacktoberfest-2020/listener"
 )
@@ -13,9 +14,10 @@ func main() {
 
 	directoryWatch := cfg.Directory
 	excludedDirectories := cfg.Exclude
-	command := cfg.Command
+	commands := cfg.Commands
 
-	cl := listener.CreateChangesListener(excludedDirectories, command)
+	jr := command.CreateJobRunner(commands)
+	cl := listener.CreateChangesListener(excludedDirectories, jr)
 	defer cl.CloseWatcher()
 
 	done := make(chan bool)
