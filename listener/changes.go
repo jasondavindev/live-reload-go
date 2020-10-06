@@ -14,10 +14,10 @@ import (
 type ChangesListener struct {
 	watcher             *fsnotify.Watcher
 	excludedDirectories []string
-	job                 command.Job
+	jobs                []command.Job
 }
 
-func CreateChangesListener(excludedDirectories string, cmd string) ChangesListener {
+func CreateChangesListener(excludedDirectories string, commands []string) ChangesListener {
 	listener := ChangesListener{}
 	listener.watcher = CreateWatcher()
 	listener.excludedDirectories = splitExcludedFiles(excludedDirectories)
@@ -101,7 +101,9 @@ func (cl *ChangesListener) SetupDirectoriesToWatch(directory string) {
 
 func (cl *ChangesListener) EventHandler(event fsnotify.Event) bool {
 	if isModifiedFile(event) {
-		fmt.Println(cl.job.ExecuteJob())
+		for _, job := range cl.jobs {
+			fmt.Println(job.ExecuteJob())
+		}
 		return true
 	}
 
