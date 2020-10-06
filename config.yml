@@ -2,4 +2,5 @@ development:
   goenv: development
   directory: ""
   exclude: ""
-  commands: ["",""]
+  commands:
+    - ""
