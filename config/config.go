@@ -14,7 +14,7 @@ type Config struct {
 	Goenv     string
 	Directory string
 	Exclude   string
-	Command   string
+	Commands  []string
 }
 
 //CfgFactory generates config based on config.yml file

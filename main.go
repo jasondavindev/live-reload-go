@@ -13,9 +13,9 @@ func main() {
 
 	directoryWatch := cfg.Directory
 	excludedDirectories := cfg.Exclude
-	command := cfg.Command
+	commands := cfg.Commands
 
-	cl := listener.CreateChangesListener(excludedDirectories, command)
+	cl := listener.CreateChangesListener(excludedDirectories, commands)
 	defer cl.CloseWatcher()
 
 	done := make(chan bool)
