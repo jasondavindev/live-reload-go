@@ -112,8 +112,14 @@ func (cl *ChangesListener) EventHandler(event fsnotify.Event) bool {
 }
 
 func isHiddenFile(path string) bool {
-	_, fileName := filepath.Split(path)
-	return filepath.HasPrefix(path, ".") || (fileName[0:1] == "." && fileName != "." && fileName != "..")
+	absolutePath, err := filepath.Abs(path)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	fileName := filepath.Base(absolutePath)
+
+	return filepath.HasPrefix(absolutePath, ".") || (fileName[0:1] == "." && fileName != "." && fileName != "..")
 }
 
 func findSubDirectories(directory string) ([]string, error) {
@@ -125,16 +131,10 @@ func findSubDirectories(directory string) ([]string, error) {
 		}
 
 		if info.IsDir() {
-			absolutePath, err := filepath.Abs(newPath)
-			if err != nil {
-				return err
-			}
-
-			if isHiddenFile(absolutePath) {
+			if isHiddenFile(newPath) {
 				return filepath.SkipDir
 			}
-
-			paths = append(paths, absolutePath)
+			paths = append(paths, newPath)
 		}
 
 		return nil
