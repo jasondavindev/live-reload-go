@@ -1,7 +1,6 @@
 package listener
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -14,17 +13,14 @@ import (
 type ChangesListener struct {
 	watcher             *fsnotify.Watcher
 	excludedDirectories []string
-	jobs                []command.Job
+	jobRunner           command.JobRunner
 }
 
-func CreateChangesListener(excludedDirectories string, commands []string) ChangesListener {
+func CreateChangesListener(excludedDirectories string, jobRunner command.JobRunner) ChangesListener {
 	listener := ChangesListener{}
 	listener.watcher = CreateWatcher()
 	listener.excludedDirectories = splitExcludedFiles(excludedDirectories)
-
-	for _, cmd := range commands {
-		listener.jobs = append(listener.jobs, command.CreateJob(cmd))
-	}
+	listener.jobRunner = jobRunner
 
 	return listener
 }
@@ -102,9 +98,7 @@ func (cl *ChangesListener) SetupDirectoriesToWatch(directory string) {
 
 func (cl *ChangesListener) EventHandler(event fsnotify.Event) bool {
 	if isModifiedFile(event) {
-		for _, job := range cl.jobs {
-			fmt.Println(job.ExecuteJob())
-		}
+		cl.jobRunner.RunJobs()
 		return true
 	}
 
