@@ -21,7 +21,10 @@ func CreateChangesListener(excludedDirectories string, commands []string) Change
 	listener := ChangesListener{}
 	listener.watcher = CreateWatcher()
 	listener.excludedDirectories = splitExcludedFiles(excludedDirectories)
-	listener.job = command.CreateJob(cmd)
+
+	for _, cmd := range commands {
+		listener.jobs = append(listener.jobs, command.CreateJob(cmd))
+	}
 
 	return listener
 }
@@ -89,8 +92,6 @@ func (cl *ChangesListener) SetupDirectoriesToWatch(directory string) {
 		log.Fatal(err)
 	}
 
-	directories = append(directories, directory)
-
 	for _, file := range directories {
 		err = cl.watcher.Add(file)
 		if err != nil {
@@ -110,8 +111,9 @@ func (cl *ChangesListener) EventHandler(event fsnotify.Event) bool {
 	return false
 }
 
-func isHiddenFile(fileName string) bool {
-	return filepath.HasPrefix(fileName, ".") && fileName != "." && fileName != ".."
+func isHiddenFile(path string) bool {
+	_, fileName := filepath.Split(path)
+	return filepath.HasPrefix(path, ".") || (fileName[0:1] == "." && fileName != "." && fileName != "..")
 }
 
 func findSubDirectories(directory string) ([]string, error) {
@@ -123,12 +125,16 @@ func findSubDirectories(directory string) ([]string, error) {
 		}
 
 		if info.IsDir() {
-			name := info.Name()
-			hidden := isHiddenFile(name)
-			if hidden {
+			absolutePath, err := filepath.Abs(newPath)
+			if err != nil {
+				return err
+			}
+
+			if isHiddenFile(absolutePath) {
 				return filepath.SkipDir
 			}
-			paths = append(paths, newPath)
+
+			paths = append(paths, absolutePath)
 		}
 
 		return nil
