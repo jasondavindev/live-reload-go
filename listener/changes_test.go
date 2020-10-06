@@ -17,7 +17,7 @@ func TestIsModifiedFile(t *testing.T) {
 func TestIsExcludedFile(t *testing.T) {
 	filepath := "/etc/file.go"
 	excludedFiles := "file.go"
-	listener := CreateChangesListener(excludedFiles, "echo")
+	listener := CreateChangesListener(excludedFiles, []string{"echo", "ls"})
 
 	assert.Equal(t, true, listener.isExcludedFile(filepath))
 
