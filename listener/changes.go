@@ -114,7 +114,7 @@ func isHiddenFile(path string) bool {
 
 	fileName := filepath.Base(absolutePath)
 
-	return filepath.HasPrefix(absolutePath, ".") || (fileName[0:1] == "." && fileName != "." && fileName != "..")
+	return filepath.HasPrefix(absolutePath, ".") || fileName[0:1] == "."
 }
 
 func findSubDirectories(directory string) ([]string, error) {
