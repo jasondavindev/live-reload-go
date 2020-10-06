@@ -1,6 +1,7 @@
 package listener
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -98,7 +99,7 @@ func (cl *ChangesListener) SetupDirectoriesToWatch(directory string) {
 
 func (cl *ChangesListener) EventHandler(event fsnotify.Event) bool {
 	if isModifiedFile(event) {
-		cl.jobRunner.RunJobs()
+		formatResponse(cl.jobRunner.RunJobs())
 		return true
 	}
 
@@ -133,4 +134,10 @@ func findSubDirectories(directory string) ([]string, error) {
 
 		return nil
 	})
+}
+
+func formatResponse(res []string) {
+	for _, str := range res {
+		fmt.Println(str)
+	}
 }

@@ -1,7 +1,6 @@
 package command
 
 import (
-	"fmt"
 	"log"
 	"os/exec"
 	"strings"
@@ -55,8 +54,12 @@ func (j *JobRunner) AddJob(job job) {
 	j.jobs = append(j.jobs, job)
 }
 
-func (j *JobRunner) RunJobs() {
+func (j *JobRunner) RunJobs() []string {
+	res := []string{}
+
 	for _, job := range j.jobs {
-		fmt.Println(job.executeJob())
+		res = append(res, job.executeJob())
 	}
+
+	return res
 }
