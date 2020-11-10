@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-Esse repositório tem como objetivo participar do evento [Hacktoberfest](https://hacktoberfest.digitalocean.com/) da DigitalOcean, construindo uma aplicação capaz de fazer hot reload de códigos para ambiente de desenvolvimento. Você ver como exemplo [nodemon](https://github.com/remy/nodemon), uma biblioteca JavaScript.
+Esse repositório tem como objetivo participar do evento [Hacktoberfest](https://hacktoberfest.digitalocean.com/) da DigitalOcean, construindo uma aplicação capaz de fazer hot reload de códigos para ambiente de desenvolvimento. Você pode ver como exemplo [nodemon](https://github.com/remy/nodemon), uma biblioteca JavaScript.
 
 ## Funcionalidades
 - Escuta eventos de alteração (permissão, nome, conteúdo) em diretórios e arquivos
