@@ -18,6 +18,7 @@ func main() {
 
 	jr := command.CreateJobRunner(commands)
 	cl := listener.CreateChangesListener(excludedDirectories, jr)
+	listener.RunCommandsAndFormatResponse(&jr)
 	defer cl.CloseWatcher()
 
 	done := make(chan bool)
