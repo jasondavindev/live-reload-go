@@ -16,7 +16,7 @@ Esse repositório tem como objetivo participar do evento [Hacktoberfest](https:/
 Para buildar a aplicação, é necessário ter a versão 1.15 do [Golang](https://golang.org/dl/).
 
 ```bash
-go build main.go -o live_reload
+go build -o live_reload
 ```
 
 Com o binário construído, é necessário apenas executá-lo via command line.
