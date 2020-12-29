@@ -1,6 +1,7 @@
 package command
 
 import (
+	"bytes"
 	"log"
 	"os/exec"
 	"strings"
@@ -32,13 +33,15 @@ func createJob(commandStr string) job {
 func (j *job) executeJob() string {
 	cmd := exec.Command(j.cmdName, j.cmdArgs...)
 
-	stdout, err := cmd.Output()
+	var stdout bytes.Buffer
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stdout
 
-	if err != nil {
-		log.Fatal(err.Error())
-	}
+	cmd.Run()
 
-	return string(stdout)
+	outStr := string(stdout.Bytes())
+
+	return outStr
 }
 
 func CreateJobRunner(commandList []string) JobRunner {
