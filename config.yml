@@ -1,6 +1,6 @@
 development:
   goenv: development
-  directory: ""
-  exclude: ""
+  directory: "./"
+  exclude: "./bin/"
   commands:
-    - ""
+    - "go run main.go"
