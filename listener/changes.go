@@ -141,3 +141,7 @@ func formatResponse(res []string) {
 		fmt.Println(str)
 	}
 }
+
+func RunCommandsAndFormatResponse(jobRunner *command.JobRunner) {
+	formatResponse(jobRunner.RunJobs())
+}
